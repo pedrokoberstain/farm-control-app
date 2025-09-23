@@ -7,16 +7,13 @@ import { useAuth } from '../../app/_layout';
 export default function TabLayout() {
   const { user, signOut } = useAuth();
 
-  // Se o usuário NÃO está logado, redireciona para a tela de login
   if (!user) {
     return <Redirect href="/(auth)/login" />;
   }
 
-  // Se ESTÁ logado, mostra o app principal com as abas
   const handleLogout = () => {
     Alert.alert(
-      "Sair da Conta",
-      "Tem certeza que deseja encerrar a sessão?",
+      "Sair da Conta", "Tem certeza que deseja encerrar a sessão?",
       [
         { text: "Cancelar", style: "cancel" },
         { text: "Sair", style: "destructive", onPress: signOut },
@@ -64,6 +61,15 @@ export default function TabLayout() {
           title: 'Relatórios',
           headerTitle: 'Relatório de Produtividade',
           tabBarIcon: ({ color }) => <MaterialCommunityIcons size={28} name="chart-bar" color={color} />,
+        }}
+      />
+      
+      {/* AQUI ESTÁ A CORREÇÃO: */}
+      {/* Escondemos a rota da tela de detalhes da barra de abas */}
+      <Tabs.Screen
+        name="fazenda/[id]"
+        options={{
+          href: null, // Isso remove a rota da barra de abas
         }}
       />
     </Tabs>
