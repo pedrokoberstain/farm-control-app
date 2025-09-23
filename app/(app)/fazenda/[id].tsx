@@ -1,23 +1,26 @@
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Stack, useLocalSearchParams } from 'expo-router';
+import React from 'react';
 import { Dimensions, FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-// --- DADOS DE EXEMPLO ATUALIZADOS ---
-// No futuro, isso virá do seu banco de dados (Firebase)
-const DADOS_PROPRIEDADES = [
-  { id: '1', nome: 'Fazenda Santa Maria', local: 'Dourados, MS', hectares: 350 },
-  { id: '2', nome: 'Sítio Boa Esperança', local: 'Rio Brilhante, MS', hectares: 120 },
-  { id: '3', nome: 'Fazenda Alvorada', local: 'Maracaju, MS', hectares: 800 },
-];
+type Plantio = {
+  nomePlantio: string;
+  dataPlantio: string;
+  dataColheita: string;
+  planoFertilizacao: string;
+  quantidadeFertilizante: number;
+  descricao: string;
+  images: string[];
+};
 
-const DADOS_PLANTIOS = {
+const DADOS_PLANTIOS: Record<string, Plantio> = {
   '1': {
     nomePlantio: 'Soja Safra Verão 24/25',
     dataPlantio: '2024-10-15',
     dataColheita: '2025-02-20',
     planoFertilizacao: 'NPK 10-20-20 na base + Cobertura de Potássio',
-    quantidadeFertilizante: 250, // litros/ha
-    descricao: 'Plantio realizado em ótimas condições de umidade do solo. A emergência foi uniforme em toda a área. Acompanhamento semanal de pragas e doenças.',
+    quantidadeFertilizante: 250,
+    descricao: 'Plantio realizado em ótimas condições de umidade do solo. A emergência foi uniforme em toda a área.',
     images: ['https://placehold.co/400x300/a8e0b0/333?text=Soja', 'https://placehold.co/400x300/e0d8a8/333?text=Colheita', 'https://placehold.co/400x300/a8cde0/333?text=Trator']
   },
   '2': {
@@ -25,8 +28,8 @@ const DADOS_PLANTIOS = {
     dataPlantio: '2025-02-25',
     dataColheita: '2025-07-15',
     planoFertilizacao: 'Adubação nitrogenada em cobertura',
-    quantidadeFertilizante: 180, // litros/ha
-    descricao: 'Plantio logo após a colheita da soja. Necessitou de irrigação suplementar durante a fase de pendoamento devido a veranico.',
+    quantidadeFertilizante: 180,
+    descricao: 'Plantio logo após a colheita da soja. Necessitou de irrigação suplementar durante a fase de pendoamento.',
     images: ['https://placehold.co/400x300/f0e68c/333?text=Milho', 'https://placehold.co/400x300/add8e6/333?text=Irriga%C3%A7%C3%A3o', 'https://placehold.co/400x300/f08080/333?text=Campo']
   },
   '3': {
@@ -34,20 +37,22 @@ const DADOS_PLANTIOS = {
     dataPlantio: '2025-05-10',
     dataColheita: '2025-08-05',
     planoFertilizacao: 'Fosfatagem e adubação orgânica pré-plantio',
-    quantidadeFertilizante: 90, // litros/ha
-    descricao: 'Cultivo irrigado por pivô central. Excelente controle de plantas daninhas, resultando em um estande limpo e produtivo.',
+    quantidadeFertilizante: 90,
+    descricao: 'Cultivo irrigado por pivô central. Excelente controle de plantas daninhas.',
     images: ['https://placehold.co/400x300/90ee90/333?text=Feij%C3%A3o', 'https://placehold.co/400x300/b0c4de/333?text=Piv%C3%B4', 'https://placehold.co/400x300/9acd32/333?text=Vagem']
   }
 };
-// --- FIM DOS DADOS DE EXEMPLO ---
 
-// Função para calcular a duração entre duas datas
+const DADOS_PROPRIEDADES = [
+  { id: '1', nome: 'Fazenda Santa Maria', local: 'Dourados, MS', hectares: 350 },
+  { id: '2', nome: 'Sítio Boa Esperança', local: 'Rio Brilhante, MS', hectares: 120 },
+  { id: '3', nome: 'Fazenda Alvorada', local: 'Maracaju, MS', hectares: 800 },
+];
+
 function calcularDuracao(dataInicio: string, dataFim: string): string {
   const inicio = new Date(dataInicio);
   const fim = new Date(dataFim);
-  if (isNaN(inicio.getTime()) || isNaN(fim.getTime())) {
-    return 'N/D';
-  }
+  if (isNaN(inicio.getTime()) || isNaN(fim.getTime())) return 'N/D';
   const diffTime = Math.abs(fim.getTime() - inicio.getTime());
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
   return `${diffDays} dias`;
@@ -55,7 +60,14 @@ function calcularDuracao(dataInicio: string, dataFim: string): string {
 
 export default function TelaDetalheFazenda() {
   const { id } = useLocalSearchParams<{ id: string }>();
+
+  // Adiciona uma verificação de segurança para o caso do id não existir
+  if (!id) {
+    return <Text style={styles.notFound}>ID da fazenda não fornecido!</Text>;
+  }
+
   const fazenda = DADOS_PROPRIEDADES.find(item => item.id === id);
+  
   const plantio = DADOS_PLANTIOS[id];
 
   if (!fazenda || !plantio) {
@@ -115,8 +127,8 @@ export default function TelaDetalheFazenda() {
         </View>
 
         <TouchableOpacity style={styles.aboutButton}>
-          <FontAwesome5 name="info-circle" size={18} color="#555" />
-          <Text style={styles.aboutButtonText}>Sobre a {fazenda.nome}</Text>
+            <FontAwesome5 name="info-circle" size={18} color="#555" />
+            <Text style={styles.aboutButtonText}>Sobre a {fazenda.nome}</Text>
         </TouchableOpacity>
       </ScrollView>
     </>
