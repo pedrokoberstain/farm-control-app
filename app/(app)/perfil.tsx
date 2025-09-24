@@ -1,13 +1,14 @@
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router'; // <-- 1. Importado o useRouter
 import React from 'react';
 import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useAuth } from '../../app/_layout';
 
 type ProfileListItemProps = {
-  icon: React.ComponentProps<typeof MaterialCommunityIcons>['name']; 
+  icon: React.ComponentProps<typeof MaterialCommunityIcons>['name'];
   text: string;
   onPress: () => void;
-  isDestructive?: boolean; 
+  isDestructive?: boolean;
 };
 
 const ProfileListItem = ({ icon, text, onPress, isDestructive = false }: ProfileListItemProps) => (
@@ -22,6 +23,7 @@ const ProfileListItem = ({ icon, text, onPress, isDestructive = false }: Profile
 
 export default function ProfileScreen() {
   const { signOut } = useAuth();
+  const router = useRouter();
 
   // Dados de exemplo do usuário
   const userData = {
@@ -56,7 +58,8 @@ export default function ProfileScreen() {
       {/* Seção de Conta */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Conta</Text>
-        <ProfileListItem icon="account-edit-outline" text="Editar Perfil" onPress={() => Alert.alert('Funcionalidade Futura', 'Aqui abriria a tela para editar o perfil.')} />
+        {/* 3. O onPress agora usa o router para navegar */}
+        <ProfileListItem icon="account-edit-outline" text="Editar Perfil" onPress={() => router.push('/editar-perfil')} />
         <ProfileListItem icon="lock-outline" text="Alterar Senha" onPress={() => Alert.alert('Funcionalidade Futura', 'Aqui abriria a tela para alterar a senha.')} />
       </View>
       
