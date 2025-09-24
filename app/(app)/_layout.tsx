@@ -48,7 +48,6 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <MaterialCommunityIcons size={28} name="chart-bar" color={color} />,
         }}
       />
-      {}
       <Tabs.Screen
         name="perfil"
         options={{
@@ -57,10 +56,22 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <FontAwesome5 size={26} name="user-circle" color={color} />,
         }}
       />
+      
+      {}
       <Tabs.Screen
         name="fazenda/[id]"
         options={{
           href: null,
+        }}
+      />
+      {}
+      {}
+      <Tabs.Screen
+        name="editar-perfil"
+        options={{
+          href: null,
+          headerShown: false,
+          title: 'Editar Perfil',
         }}
       />
     </Tabs>
