@@ -3,8 +3,14 @@ import React from 'react';
 import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useAuth } from '../../app/_layout';
 
-// Componente reutilizável para cada item da lista
-const ProfileListItem = ({ icon, text, onPress, isDestructive = false }) => (
+type ProfileListItemProps = {
+  icon: React.ComponentProps<typeof MaterialCommunityIcons>['name']; 
+  text: string;
+  onPress: () => void;
+  isDestructive?: boolean; 
+};
+
+const ProfileListItem = ({ icon, text, onPress, isDestructive = false }: ProfileListItemProps) => (
   <TouchableOpacity style={styles.listItem} onPress={onPress}>
     <View style={styles.listItemIcon}>
       <MaterialCommunityIcons name={icon} size={24} color={isDestructive ? '#d32f2f' : '#2e7d32'} />
@@ -22,7 +28,7 @@ export default function ProfileScreen() {
     name: 'Pedro Fazendeiro',
     email: 'pedro.fazendeiro@email.com',
     city: 'Dourados, MS',
-    cpf: '***.123.456-**' // Importante: Sempre mascare dados sensíveis
+    cpf: '***.123.456-**'
   };
   
   const handleLogout = () => {
@@ -104,7 +110,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   section: {
-    marginTop: -20, 
+    marginTop: -20,
     marginHorizontal: 16,
     marginBottom: 20,
     backgroundColor: '#fff',
