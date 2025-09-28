@@ -1,48 +1,63 @@
+import React, { useState } from 'react';
+// AQUI ESTÃO AS CORREÇÕES: Adicionamos 'Image'
 import { Link } from 'expo-router';
-import React from 'react';
-import { Image, SafeAreaView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { useAuth } from '../../app/_layout';
-import GoogleIcon from '../../components/googleIcon';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { ActivityIndicator, Alert, Image, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import GoogleIcon from '../../components/googleIcon'; // <-- E importamos o GoogleIcon
+import { auth } from '../../firebaseConfig';
 
 export default function LoginScreen() {
-  const { signIn } = useAuth();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = () => {
-    signIn('simulated-user-token');
+  const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert("Erro", "Por favor, preencha e-mail e senha.");
+      return;
+    }
+    setLoading(true);
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (error: any) {
+      Alert.alert('Erro', 'E-mail ou senha inválidos.');
+    } finally {
+      setLoading(false);
+    }
   };
-
+  
   const handleGoogleLogin = () => {
-    signIn('google-token-456');
+    Alert.alert("Em breve", "O login com Google será implementado em breve!");
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
       <View style={styles.content}>
-        <Image source={require('../../assets/images/icon.png')} /* Você pode trocar para o seu logo */ style={styles.logo} />
+        <Image source={require('../../assets/images/icon.png')} style={styles.logo} />
         <Text style={styles.title}>Bem-vindo de volta!</Text>
-        <Text style={styles.subtitle}>Faça login para continuar</Text>
         
         <TextInput
           style={styles.input}
           placeholder="Seu e-mail"
+          value={email}
+          onChangeText={setEmail}
           keyboardType="email-address"
           autoCapitalize="none"
         />
         <TextInput
           style={styles.input}
           placeholder="Sua senha"
+          value={password}
+          onChangeText={setPassword}
           secureTextEntry
         />
         
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>Entrar</Text>
+        <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={loading}>
+          {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Entrar</Text>}
         </TouchableOpacity>
 
         <View style={styles.dividerContainer}>
-          <View style={styles.divider} />
-          <Text style={styles.dividerText}>OU</Text>
-          <View style={styles.divider} />
+          <View style={styles.divider} /><Text style={styles.dividerText}>OU</Text><View style={styles.divider} />
         </View>
 
         <TouchableOpacity style={styles.socialButton} onPress={handleGoogleLogin}>
