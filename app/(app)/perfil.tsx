@@ -2,7 +2,7 @@ import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router'; // <-- 1. Importado o useRouter
 import React from 'react';
 import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useAuth } from '../../app/_layout';
+import { useAuth } from '../../hooks/AuthProvider';
 
 type ProfileListItemProps = {
   icon: React.ComponentProps<typeof MaterialCommunityIcons>['name'];
