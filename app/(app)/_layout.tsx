@@ -1,22 +1,15 @@
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Redirect, Tabs } from 'expo-router';
 import React from 'react';
-import { Alert, Platform, TouchableOpacity } from 'react-native';
-import { useAuth } from '../../app/_layout';
+import { Platform } from 'react-native';
+import { useAuth } from '../../hooks/AuthProvider';
 
 export default function TabLayout() {
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
 
   if (!user) {
     return <Redirect href="/(auth)/login" />;
   }
-
-  const handleLogout = () => {
-    Alert.alert("Sair da Conta", "Tem certeza?", [
-      { text: "Cancelar", style: "cancel" },
-      { text: "Sair", style: "destructive", onPress: signOut },
-    ]);
-  };
 
   return (
     <Tabs
@@ -37,11 +30,6 @@ export default function TabLayout() {
           title: 'Início',
           headerTitle: 'Minhas Propriedades',
           tabBarIcon: ({ color }) => <FontAwesome5 size={26} name="tractor" color={color} />,
-          headerRight: () => (
-            <TouchableOpacity onPress={handleLogout} style={{ marginRight: 15 }}>
-              <MaterialCommunityIcons name="logout" size={28} color="#555" />
-            </TouchableOpacity>
-          ),
         }}
       />
       <Tabs.Screen
@@ -68,18 +56,8 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <FontAwesome5 size={26} name="user-circle" color={color} />,
         }}
       />
-      <Tabs.Screen
-        name="fazenda/[id]"
-        options={{
-          href: null,
-        }}
-      />
-      <Tabs.Screen
-        name="editar-perfil"
-        options={{
-          href: null,
-        }}
-      />
+      <Tabs.Screen name="fazenda/[id]" options={{ href: null }} />
+      <Tabs.Screen name="editar-perfil" options={{ href: null }} />
     </Tabs>
   );
 }

@@ -1,15 +1,8 @@
-import { Redirect, Stack } from 'expo-router';
+import { Slot } from 'expo-router';
 import React from 'react';
-import { useAuth } from '../../app/_layout';
 
+// Este layout simplificado apenas renderiza a tela filha (login ou register)
+// diretamente dentro do navegador Stack principal, sem criar um novo Stack.
 export default function AuthLayout() {
-  const { user } = useAuth();
-  console.log("Verificando porteiro do (auth)... Usuário:", user);
-
-  if (user) {
-    console.log("Porteiro (auth): Usuário logado! Redirecionando para /app...");
-    return <Redirect href="/(app)" />;
-  }
-
-  return <Stack screenOptions={{ headerShown: false }} />;
+  return <Slot />;
 }

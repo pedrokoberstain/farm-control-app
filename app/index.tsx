@@ -2,7 +2,7 @@ import React from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 // Esta é a tela de entrada oficial do app.
-// Ela permite que o _layout.tsx faça o trabalho de redirecionamento.
+// O AuthProvider já cuida do redirecionamento baseado no estado de autenticação
 const StartPage = () => {
   return (
     <View style={styles.container}>
