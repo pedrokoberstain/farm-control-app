@@ -1,4 +1,4 @@
-import { Link } from 'expo-router';
+import { router } from 'expo-router';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import React, { useState } from 'react';
 import { ActivityIndicator, Alert, Image, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
@@ -17,8 +17,9 @@ export default function RegisterScreen() {
     }
     setLoading(true);
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      console.log('Usuário criado:', userCredential.user.uid);
+      await createUserWithEmailAndPassword(auth, email, password);
+      // O AuthProvider já vai detectar a mudança do estado do usuário
+      // e redirecionar automaticamente
     } catch (error: any) {
       if (error.code === 'auth/email-already-in-use') Alert.alert('Erro', 'Este e-mail já está em uso.');
       else if (error.code === 'auth/weak-password') Alert.alert('Erro', 'A senha deve ter no mínimo 6 caracteres.');
@@ -60,11 +61,9 @@ export default function RegisterScreen() {
           {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Cadastrar</Text>}
         </TouchableOpacity>
 
-        <Link href="/(auth)/login" asChild>
-          <TouchableOpacity style={styles.link}>
-            <Text style={styles.linkText}>Já tem uma conta? <Text style={{fontWeight: 'bold'}}>Faça login</Text></Text>
-          </TouchableOpacity>
-        </Link>
+        <TouchableOpacity style={styles.link} onPress={() => router.push('/(auth)/login')}>
+          <Text style={styles.linkText}>Já tem uma conta? <Text style={{fontWeight: 'bold'}}>Faça login</Text></Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
